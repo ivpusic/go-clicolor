@@ -23,7 +23,7 @@ import cli "github.com/ivpusic/go-clicolor/clicolor"
 
 func main() {
 	cli.Print("some text").In("green")
-	cli.Print("{red}[INFO]: {white}Some text in white. {default}Some text in default color").InFormat()
+	cli.Print("{red}Some text in red. {white}Some text in white. {default}Some text in default color").InFormat()
 }
 ```
 
