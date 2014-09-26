@@ -8,6 +8,6 @@ func ExamplePrint_in() {
 }
 
 func ExamplePrint_inFormat() {
-	cli.Print("{red}[ERROR]: {blue}Some text in blue. {white}Some text in white. {default}Some error!!!").InFormat()
-	// prints: [ERROR]: Some text in blue. Some text in white. Some text in default color
+	cli.Print("{red}Some text in red. {white}Some text in white. {default}Some text in default color.").InFormat()
+	// prints: Some text in red. Some text in white. Some text in default color.
 }
