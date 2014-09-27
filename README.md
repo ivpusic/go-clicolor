@@ -1,5 +1,6 @@
 go-clicolor
 ===========
+[![Build Status](https://travis-ci.org/ivpusic/go-clicolor.svg?branch=master)](https://travis-ci.org/ivpusic/go-clicolor)
 
 Package provides ability to print colored text to stdout
 
