@@ -3,6 +3,8 @@ package clicolor
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -18,9 +20,14 @@ type Printer struct {
 
 var colors map[string]string
 
+// Will be used as first argument of fmt.Fprintln
+// so with this you are able to redirect output stream
+var Out io.Writer
+
 // Printing colored text in one choosed color
 func (p *Printer) In(color string) {
-	fmt.Printf("%s%s%s%s\n", startSeq, getColor(color), p.text, endSeq)
+	p.text = "{" + color + "}" + p.text
+	p.InFormat()
 }
 
 // Printing colored text based on user format
@@ -46,7 +53,7 @@ func (p *Printer) InFormat() {
 		p.text = strings.Replace(p.text, value[0], clifmt, -1)
 	}
 
-	fmt.Println(p.text)
+	fmt.Fprintln(Out, p.text)
 }
 
 // Initialization of supported colors
@@ -61,6 +68,8 @@ func init() {
 	colors["cyan"] = "36m"
 	colors["white"] = "37m"
 	colors["default"] = "39m"
+
+	Out = os.Stdout
 }
 
 // Finding color code, and returning default one if requested doesn't exit
