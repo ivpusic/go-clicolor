@@ -7,6 +7,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"github.com/shiena/ansicolor"
+	"runtime"
 )
 
 const (
@@ -69,7 +71,11 @@ func init() {
 	colors["white"] = "37m"
 	colors["default"] = "39m"
 
-	Out = os.Stdout
+	if runtime.GOOS == "windows" {
+    	Out = ansicolor.NewAnsiColorWriter(os.Stdout)
+	} else {
+		Out = os.Stdout
+	}
 }
 
 // Finding color code, and returning default one if requested doesn't exit
