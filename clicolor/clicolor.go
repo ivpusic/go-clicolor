@@ -26,6 +26,17 @@ var colors map[string]string
 // so with this you are able to redirect output stream
 var Out io.Writer
 
+var (
+	// Used to find groups that need to be colored
+	colorGroupRE *regexp.Regexp = regexp.MustCompile(`(\{\w*\}[^{}]+)`)
+
+	// Used to extract color part of `{color} text`
+	colorPartRE *regexp.Regexp = regexp.MustCompile(`{(\w*)}`)
+
+	// Used to extract text part of `{color} text` 
+	textPartRE *regexp.Regexp = regexp.MustCompile(`^{\w*}(.*)`)	
+)
+
 // Printing colored text in one choosed color
 func (p *Printer) In(color string) {
 	p.text = "{" + color + "}" + p.text
@@ -37,18 +48,15 @@ func (p *Printer) In(color string) {
 // Example: `this{red} is red{blue} and this is blue. {default} Now is default`
 func (p *Printer) InFormat() {
 	// find all text groups which need to be colored
-	re := regexp.MustCompile(`(\{\w*\}[^{}]+)`)
-	matches := re.FindAllStringSubmatch(p.text, -1)
+	matches := colorGroupRE.FindAllStringSubmatch(p.text, -1)
 
 	for _, value := range matches {
 		// extract color from `{color} some text`
-		re = regexp.MustCompile(`{(\w*)}`)
-		color := re.FindStringSubmatch(value[0])[1]
+		color := colorPartRE.FindStringSubmatch(value[0])[1]
 		colorcode := getColor(color)
 
 		// extract text from `{color} some text`
-		re = regexp.MustCompile(`^{\w*}(.*)`)
-		text := re.FindStringSubmatch(value[0])[1]
+		text := textPartRE.FindStringSubmatch(value[0])[1]
 
 		// format string for ANSI/VT1000 terminal
 		clifmt := startSeq + colorcode + text + endSeq
